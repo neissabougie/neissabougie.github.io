@@ -237,7 +237,7 @@ footer .wrap { padding-block: 22px 32px; }
         <button class="btn ghost" type="button" id="wSendMail" data-t="sendMail"></button>
         <button class="btn ghost" type="button" id="wShare" data-t="shareBtn" hidden></button>
       </div>
-      <p class="note" id="wNote" data-t="noteStart"></p>
+      <p class="note" id="wNote" hidden></p>
     </form>
   </div>
 </section>
@@ -740,7 +740,7 @@ async function senden(kanal) {
   const fenster = (bild && uploadAktiv() && !handy) ? window.open("", "_blank") : null;
   let link = "";
   if (bild && uploadAktiv()) {
-    sendet = true; note.textContent = t("upl");
+    sendet = true; note.textContent = t("upl"); note.hidden = false;
     try { link = await bildLink(); } catch { link = ""; }
     sendet = false;
   }
@@ -754,7 +754,9 @@ async function senden(kanal) {
     if (fenster) fenster.close();
     const a = document.createElement("a"); a.href = mailLink(t("subjWish"), text); document.body.appendChild(a); a.click(); a.remove();
   }
-  note.textContent = link ? t("noteSent") : (bild ? (uploadAktiv() ? t("uplFail") : t("noteImg")) : t("noteNoImg"));
+  // Hinweis nur zeigen, wenn das Bild nicht mitgeschickt werden konnte
+  if (bild && !link) { note.textContent = uploadAktiv() ? t("uplFail") : t("noteImg"); note.hidden = false; }
+  else note.hidden = true;
 }
 $("#wSendWa").addEventListener("click", () => senden("wa"));
 $("#wSendMail").addEventListener("click", () => senden("mail"));
@@ -762,8 +764,8 @@ $("#wSendMail").addEventListener("click", () => senden("mail"));
 function teilenMoeglich() { try { return handy && !!bild && !!navigator.canShare && navigator.canShare({ files: [bild] }); } catch { return false; } }
 $("#wFile").addEventListener("change", () => { $("#wShare").hidden = !teilenMoeglich(); });
 $("#wShare").addEventListener("click", async () => {
-  try { await navigator.share({ files: [bild], text: wunschText("") }); $("#wNote").textContent = t("noteShared"); }
-  catch (e) { if (!e || e.name !== "AbortError") $("#wNote").textContent = t("noteImg"); }
+  try { await navigator.share({ files: [bild], text: wunschText("") }); }
+  catch (e) { if (!e || e.name !== "AbortError") { $("#wNote").textContent = t("noteImg"); $("#wNote").hidden = false; } }
 });
 
 function setzeSprache(l) {
