@@ -235,6 +235,7 @@ footer .wrap { padding-block: 22px 32px; }
       <div class="btns">
         <button class="btn wa" type="button" id="wSendWa" data-t="sendWa"></button>
         <button class="btn ghost" type="button" id="wSendMail" data-t="sendMail"></button>
+        <button class="btn ghost" type="button" id="wShare" data-t="shareBtn" hidden></button>
       </div>
       <p class="note" id="wNote" data-t="noteStart"></p>
     </form>
@@ -278,7 +279,11 @@ const SHOP = {
   name: "Neïssa Bougie",
   whatsapp: "4915732894746",
   whatsappAnzeige: "+49 157 32894746",
-  email: "neissabougie@gmail.com"
+  email: "neissabougie@gmail.com",
+  // Bild-Upload für die Wunschkerze (kostenloses Cloudinary-Konto).
+  // cloud = "Cloud name" aus dem Cloudinary-Dashboard, preset = Name des
+  // unsignierten Upload-Presets. Leer lassen = kein Upload, Kunde hängt Bild selbst an.
+  cloudinary: { cloud: "", preset: "" }
 };
 
 const KATEGORIEN = [
@@ -383,6 +388,7 @@ const GESCHENKE = [
 
 const T = {
   de: {
+    upl: "Bild wird hochgeladen …", uplFail: "Das Hochladen hat nicht geklappt. Bitte hänge das Bild im Chat selbst an.", lImgLink: "Bild", shareBtn: "Bild direkt teilen", noteSent: "Gesendet wird mit Bild-Link. Neïssa sieht dein Foto direkt in der Nachricht.", noteShared: "Wähle im Teilen-Menü WhatsApp und dann den Chat mit Neïssa Bougie (+49 157 32894746).", 
     freeBadge: "Selbst wählen", c1: "Kerze 1", c2: "Kerze 2", chocChoice: "Schokolade", wineChoice: "Wein",
     chocs: ["Zartbitter-Pralinen", "Vollmilch-Pralinen", "Weiße Schokolade", "Zartbitter mit Orange", "Weiße Schokolade mit Erdbeere"],
     wines: ["Kleiner Rotwein (20 cl)", "Kleiner Weißwein (20 cl)", "Kleiner Roséwein (20 cl)", "Piccolo Sekt (20 cl)", "Ohne Alkohol: Traubensaft"],
@@ -408,6 +414,7 @@ const T = {
     foot: "Bougie parfumée faite à la main"
   },
   fr: {
+    upl: "Envoi de l’image …", uplFail: "L’envoi de l’image a échoué. Ajoute-la toi-même dans la discussion.", lImgLink: "Image", shareBtn: "Partager l’image directement", noteSent: "Le message contient le lien de ton image. Neïssa voit ta photo directement.", noteShared: "Choisis WhatsApp dans le menu de partage, puis la discussion avec Neïssa Bougie (+49 157 32894746).", 
     freeBadge: "À composer", c1: "Bougie 1", c2: "Bougie 2", chocChoice: "Chocolat", wineChoice: "Vin",
     chocs: ["Pralinés au chocolat noir", "Pralinés au chocolat au lait", "Chocolat blanc", "Chocolat noir à l’orange", "Chocolat blanc à la fraise"],
     wines: ["Petite bouteille de vin rouge (20 cl)", "Petite bouteille de vin blanc (20 cl)", "Petite bouteille de vin rosé (20 cl)", "Petite bouteille de vin pétillant (20 cl)", "Sans alcool : jus de raisin"],
@@ -433,6 +440,7 @@ const T = {
     foot: "Bougie parfumée faite à la main"
   },
   en: {
+    upl: "Uploading picture …", uplFail: "The upload didn’t work. Please attach the picture in the chat yourself.", lImgLink: "Picture", shareBtn: "Share picture directly", noteSent: "Your message includes a link to your picture, so Neïssa sees it right away.", noteShared: "Choose WhatsApp in the share menu, then the chat with Neïssa Bougie (+49 157 32894746).", 
     freeBadge: "Build your own", c1: "Candle 1", c2: "Candle 2", chocChoice: "Chocolate", wineChoice: "Wine",
     chocs: ["Dark chocolate pralines", "Milk chocolate pralines", "White chocolate", "Dark chocolate with orange", "White chocolate with strawberry"],
     wines: ["Small bottle of red wine (20 cl)", "Small bottle of white wine (20 cl)", "Small bottle of rosé wine (20 cl)", "Small bottle of sparkling wine (20 cl)", "Alcohol-free: grape juice"],
@@ -691,22 +699,72 @@ $("#wFile").addEventListener("change", (e) => {
   if (bild) { pv.style.backgroundImage = `url("${URL.createObjectURL(bild)}")`; pv.textContent = ""; $("#wFileTxt").textContent = bild.name; }
   else { pv.style.backgroundImage = ""; pv.textContent = "+"; $("#wFileTxt").textContent = t("pickImg"); }
 });
-function wunschText() {
+function wunschText(link) {
   const n = $("#wName").value.trim(), k = $("#wKat").value, w = $("#wText").value.trim();
-  return `${t("msgWish")}\n${t("lKind")}: ${k}${w ? `\n${t("lWish")}: ${w}` : ""}${n ? `\n${t("lName")}: ${n}` : ""}${bild ? "\n" + t("lImg") : ""}`;
+  const img = link ? `\n${t("lImgLink")}: ${link}` : (bild ? "\n" + t("lImg") : "");
+  return `${t("msgWish")}\n${t("lKind")}: ${k}${w ? `\n${t("lWish")}: ${w}` : ""}${n ? `\n${t("lName")}: ${n}` : ""}${img}`;
 }
-function senden(kanal) {
-  // Immer direkt den Chat mit Neïssa öffnen (WhatsApp) bzw. die Mail-Auswahl.
-  // WhatsApp-Links können nur Text tragen, das Bild hängt der Kunde im Chat an.
-  const text = wunschText(), note = $("#wNote");
-  const a = document.createElement("a");
-  if (kanal === "wa") { a.href = waLink(text); a.target = "_blank"; a.rel = "noopener"; }
-  else a.href = mailLink(t("subjWish"), text);
-  document.body.appendChild(a); a.click(); a.remove();
-  note.textContent = bild ? t("noteImg") : t("noteNoImg");
+const uploadAktiv = () => !!(SHOP.cloudinary.cloud && SHOP.cloudinary.preset);
+const handy = matchMedia("(pointer: coarse)").matches;
+// Foto verkleinern (max. 1600 px), damit der Upload schnell geht
+async function verkleinern(file) {
+  try {
+    const bmp = await createImageBitmap(file);
+    const f = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+    const c = document.createElement("canvas"); c.width = Math.round(bmp.width * f); c.height = Math.round(bmp.height * f);
+    c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+    return await new Promise(r => c.toBlob(b => r(b || file), "image/jpeg", 0.85));
+  } catch { return file; }
+}
+let hochgeladen = { datei: null, url: "" };
+async function bildLink() {
+  if (!bild || !uploadAktiv()) return "";
+  if (hochgeladen.datei === bild) return hochgeladen.url;
+  const fd = new FormData();
+  fd.append("file", await verkleinern(bild));
+  fd.append("upload_preset", SHOP.cloudinary.preset);
+  const ctrl = new AbortController(); const tm = setTimeout(() => ctrl.abort(), 30000);
+  try {
+    const r = await fetch(`https://api.cloudinary.com/v1_1/${SHOP.cloudinary.cloud}/image/upload`, { method: "POST", body: fd, signal: ctrl.signal });
+    const j = await r.json();
+    if (!r.ok || !j.secure_url) throw new Error("upload");
+    hochgeladen = { datei: bild, url: j.secure_url };
+    return j.secure_url;
+  } finally { clearTimeout(tm); }
+}
+let sendet = false;
+async function senden(kanal) {
+  if (sendet) return;
+  const note = $("#wNote");
+  // Auf dem Computer das Fenster sofort öffnen (sonst blockiert der Browser es nach dem Upload)
+  const fenster = (bild && uploadAktiv() && !handy) ? window.open("", "_blank") : null;
+  let link = "";
+  if (bild && uploadAktiv()) {
+    sendet = true; note.textContent = t("upl");
+    try { link = await bildLink(); } catch { link = ""; }
+    sendet = false;
+  }
+  const text = wunschText(link);
+  if (kanal === "wa") {
+    const ziel = waLink(text);
+    if (fenster) fenster.location.href = ziel;
+    else if (bild && uploadAktiv()) location.href = ziel;
+    else { const a = document.createElement("a"); a.href = ziel; a.target = "_blank"; a.rel = "noopener"; document.body.appendChild(a); a.click(); a.remove(); }
+  } else {
+    if (fenster) fenster.close();
+    const a = document.createElement("a"); a.href = mailLink(t("subjWish"), text); document.body.appendChild(a); a.click(); a.remove();
+  }
+  note.textContent = link ? t("noteSent") : (bild ? (uploadAktiv() ? t("uplFail") : t("noteImg")) : t("noteNoImg"));
 }
 $("#wSendWa").addEventListener("click", () => senden("wa"));
 $("#wSendMail").addEventListener("click", () => senden("mail"));
+// Handy: Bild + Text direkt über das Teilen-Menü an WhatsApp geben
+function teilenMoeglich() { try { return handy && !!bild && !!navigator.canShare && navigator.canShare({ files: [bild] }); } catch { return false; } }
+$("#wFile").addEventListener("change", () => { $("#wShare").hidden = !teilenMoeglich(); });
+$("#wShare").addEventListener("click", async () => {
+  try { await navigator.share({ files: [bild], text: wunschText("") }); $("#wNote").textContent = t("noteShared"); }
+  catch (e) { if (!e || e.name !== "AbortError") $("#wNote").textContent = t("noteImg"); }
+});
 
 function setzeSprache(l) {
   L = T[l] ? l : "de";
