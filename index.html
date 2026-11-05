@@ -185,6 +185,8 @@ footer .wrap { padding-block: 22px 32px; }
 .mail-box .btn { flex: none; width: 100%; }
 .mail-box .copyrow { display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; font-size: .95rem; }
 .mail-box pre { white-space: pre-wrap; text-align: left; font: inherit; font-size: .85rem; background: var(--blush); padding: 12px; margin: 0; max-height: 140px; overflow-y: auto; user-select: all; }
+.free-form { display: grid; gap: 12px; text-align: left; }
+.free-form .field label { font-size: .7rem; }
 </style>
 </head>
 <body>
@@ -374,11 +376,17 @@ const GESCHENKE = [
     schoko: { de: "Vollmilch-Pralinen", fr: "Pralinés au chocolat au lait", en: "Milk chocolate pralines" },
     wein:   { de: "Kleiner Weißwein (20 cl)", fr: "Petite bouteille de vin blanc (20 cl)", en: "Small bottle of white wine (20 cl)" },
     anlass: { de: "Muttertag, Danke sagen, Einweihung", fr: "Fête des mères, dire merci, crémaillère", en: "Mother’s Day, saying thank you, housewarming" },
-    fr: "Des fleurs qui ne fanent jamais.", de: "Blumen, die niemals verwelken.", en: "Flowers that never fade." }
+    fr: "Des fleurs qui ne fanent jamais.", de: "Blumen, die niemals verwelken.", en: "Flowers that never fade." },
+  { a: "Coffret", b: "à composer", frei: true, kerzen: ["menthe", "rose"],
+    fr: "Deux bougies, ton choix, ton histoire.", de: "Zwei Kerzen deiner Wahl, deine Geschichte.", en: "Two candles of your choice, your story." }
 ];
 
 const T = {
   de: {
+    freeBadge: "Selbst wählen", c1: "Kerze 1", c2: "Kerze 2", chocChoice: "Schokolade", wineChoice: "Wein",
+    chocs: ["Zartbitter-Pralinen", "Vollmilch-Pralinen", "Weiße Schokolade", "Zartbitter mit Orange", "Weiße Schokolade mit Erdbeere"],
+    wines: ["Kleiner Rotwein (20 cl)", "Kleiner Weißwein (20 cl)", "Kleiner Roséwein (20 cl)", "Piccolo Sekt (20 cl)", "Ohne Alkohol: Traubensaft"],
+    freeIntro: "Stell dein eigenes Set zusammen: zwei Kerzen, Schokolade, Wein und deine Karte.", 
     mailTitle: "E-Mail senden", mailPick: "Wähle dein E-Mail-Programm:", mailOther: "Andere Mail-App", mailCopy: "Oder kopiere Adresse und Text und schreib aus deiner Mail-App:", copyText: "Text kopieren", 
     claim: "Handgemacht · Wunschkerzen auf Anfrage",
     intro: "Duftkerzen, die aussehen wie Desserts, Drinks und kleine Kunstwerke. Wähle eine Kategorie und tippe auf eine Kerze. Deine eigene Idee?", introLink: "Schick mir deine Wunschkerze.",
@@ -400,6 +408,10 @@ const T = {
     foot: "Bougie parfumée faite à la main"
   },
   fr: {
+    freeBadge: "À composer", c1: "Bougie 1", c2: "Bougie 2", chocChoice: "Chocolat", wineChoice: "Vin",
+    chocs: ["Pralinés au chocolat noir", "Pralinés au chocolat au lait", "Chocolat blanc", "Chocolat noir à l’orange", "Chocolat blanc à la fraise"],
+    wines: ["Petite bouteille de vin rouge (20 cl)", "Petite bouteille de vin blanc (20 cl)", "Petite bouteille de vin rosé (20 cl)", "Petite bouteille de vin pétillant (20 cl)", "Sans alcool : jus de raisin"],
+    freeIntro: "Compose ton propre coffret : deux bougies, du chocolat, du vin et ta carte.", 
     mailTitle: "Envoyer un e-mail", mailPick: "Choisis ta messagerie :", mailOther: "Autre application mail", mailCopy: "Ou copie l’adresse et le texte, puis écris depuis ta messagerie :", copyText: "Copier le texte", 
     claim: "Fait main · Bougies sur mesure",
     intro: "Des bougies parfumées qui ressemblent à des desserts, des cocktails et de petites œuvres d’art. Choisis une catégorie et touche une bougie. Tu as ta propre idée ?", introLink: "Envoie-moi ta bougie de rêve.",
@@ -421,6 +433,10 @@ const T = {
     foot: "Bougie parfumée faite à la main"
   },
   en: {
+    freeBadge: "Build your own", c1: "Candle 1", c2: "Candle 2", chocChoice: "Chocolate", wineChoice: "Wine",
+    chocs: ["Dark chocolate pralines", "Milk chocolate pralines", "White chocolate", "Dark chocolate with orange", "White chocolate with strawberry"],
+    wines: ["Small bottle of red wine (20 cl)", "Small bottle of white wine (20 cl)", "Small bottle of rosé wine (20 cl)", "Small bottle of sparkling wine (20 cl)", "Alcohol-free: grape juice"],
+    freeIntro: "Build your own set: two candles, chocolate, wine and your card.", 
     mailTitle: "Send an email", mailPick: "Choose your email service:", mailOther: "Other mail app", mailCopy: "Or copy the address and text and write from your mail app:", copyText: "Copy text", 
     claim: "Handmade · Custom candles on request",
     intro: "Scented candles that look like desserts, drinks and little works of art. Pick a category and tap a candle. Have your own idea?", introLink: "Send me your dream candle.",
@@ -476,7 +492,7 @@ function render() {
       <div class="grid">${k.id === "geschenk"
         ? GESCHENKE.map((g, i) => `
         <button class="prod" type="button" data-g="${i}" aria-label="${esc(voll(g))}">
-          <span class="duo">${g.kerzen.map(id => `<img src="${esc(byId(id).foto)}" alt="" loading="lazy">`).join("")}<span class="bow">${bowSvg}${esc(t("giftShort"))}</span></span>
+          <span class="duo">${g.kerzen.map(id => `<img src="${esc(byId(id).foto)}" alt="" loading="lazy">`).join("")}<span class="bow">${bowSvg}${esc(g.frei ? t("freeBadge") : t("giftShort"))}</span></span>
           ${nameHtml(g)}
           <span class="slogan">${esc(L === "fr" ? g.fr : g[L])}</span>
         </button>`).join("")
@@ -517,6 +533,7 @@ function oeffne(i) {
     </div>`);
 }
 function oeffneGeschenk(i) {
+  if (GESCHENKE[i].frei) return oeffneFrei(i);
   const g = GESCHENKE[i], [k1, k2] = g.kerzen.map(byId);
   zeigeSheet(`
     <div class="ph"><span class="duo">${[k1, k2].map(k => `<img src="${esc(k.foto)}" alt="${esc(voll(k))}">`).join("")}<span class="bow">${bowSvg}${esc(t("giftBadge"))}</span></span></div>
@@ -548,9 +565,46 @@ function giftLinks(i) {
   const msg = geschenkNachricht(i);
   document.querySelectorAll("[data-gift]").forEach(a => a.href = a.dataset.ch === "wa" ? waLink(msg) : mailLink(t("subjAsk") + ": " + voll(GESCHENKE[i]), msg));
 }
-document.addEventListener("input", (e) => { if (e.target.id === "cardText") { const a = document.querySelector("[data-gift]"); if (a) giftLinks(+a.dataset.gift); } });
+document.addEventListener("input", (e) => { if (e.target.id === "fK1" || e.target.id === "fK2") { const im = document.querySelectorAll(".sheet .duo img"); const k = byId(e.target.value); const img = im[e.target.id === "fK1" ? 0 : 1]; if (img && k) { img.src = k.foto; img.alt = voll(k); } } if (e.target.id === "cardText" || e.target.hasAttribute("data-frei")) { const a = document.querySelector("[data-gift]"); if (a) giftLinks(+a.dataset.gift); } });
+
+function kerzenOptionen(sel) {
+  return KATEGORIEN.filter(k => k.id !== "geschenk").map(k => `<optgroup label="${esc(k.name[L])}">${PRODUKTE.filter(p => p.kat === k.id).map(p => `<option value="${p.id}"${p.id === sel ? " selected" : ""}>${esc(voll(p))}</option>`).join("")}</optgroup>`).join("");
+}
+function oeffneFrei(i) {
+  const g = GESCHENKE[i], [k1, k2] = g.kerzen.map(byId);
+  const sel = (id, label, inner) => `<div class="field"><label for="${id}">${esc(label)}</label><select id="${id}" data-frei>${inner}</select></div>`;
+  zeigeSheet(`
+    <div class="ph"><span class="duo">${[k1, k2].map(k => `<img src="${esc(k.foto)}" alt="${esc(voll(k))}">`).join("")}<span class="bow">${bowSvg}${esc(t("giftBadge"))}</span></span></div>
+    <div class="info">
+      <div class="caps">${esc(katName("geschenk"))}</div>
+      ${nameHtml(g)}
+      <div class="orn" aria-hidden="true">♡</div>
+      ${sloganBlock(g)}
+      <p class="occ">${esc(t("freeIntro"))}</p>
+      <div class="free-form">
+        ${sel("fK1", t("c1"), kerzenOptionen(k1.id))}
+        ${sel("fK2", t("c2"), kerzenOptionen(k2.id))}
+        ${sel("fSchoko", t("chocChoice"), t("chocs").map(c => `<option>${esc(c)}</option>`).join(""))}
+        ${sel("fWein", t("wineChoice"), t("wines").map(c => `<option>${esc(c)}</option>`).join(""))}
+      </div>
+      <dl><dt>${t("price")}</dt><dd>${t("onRequest")}</dd></dl>
+      <div class="card-msg"><label for="cardText">${t("cardLabel")}</label><textarea id="cardText" placeholder="${esc(t("cardPh"))}"></textarea></div>
+      <div class="btns">
+        <a class="btn wa" target="_blank" rel="noopener" data-gift="${i}" data-ch="wa" href="#">${t("askWa")}</a>
+        <a class="btn ghost" data-gift="${i}" data-ch="mail" href="#">${t("askMail")}</a>
+      </div>
+      <p class="age">${t("age")}</p>
+    </div>`);
+  giftLinks(i);
+}
 function geschenkNachricht(i) {
   const g = GESCHENKE[i], c = ($("#cardText") || {}).value?.trim();
+  if (g.frei) {
+    const v = (id) => ($("#" + id) || {}).value || "";
+    return t("msgProduct")(voll(g), katName("geschenk")) +
+      `\n${t("c1")}: ${voll(byId(v("fK1")))}\n${t("c2")}: ${voll(byId(v("fK2")))}\n${t("chocChoice")}: ${v("fSchoko")}\n${t("wineChoice")}: ${v("fWein")}` +
+      (c ? `\n${t("msgGift")}: „${c}“` : "");
+  }
   return t("msgProduct")(voll(g), katName("geschenk")) + (c ? `\n${t("msgGift")}: „${c}“` : "");
 }
 function schliesse() { $("#sheetBg").hidden = true; document.body.style.overflow = ""; }
