@@ -695,20 +695,14 @@ function wunschText() {
   const n = $("#wName").value.trim(), k = $("#wKat").value, w = $("#wText").value.trim();
   return `${t("msgWish")}\n${t("lKind")}: ${k}${w ? `\n${t("lWish")}: ${w}` : ""}${n ? `\n${t("lName")}: ${n}` : ""}${bild ? "\n" + t("lImg") : ""}`;
 }
-async function senden(kanal) {
+function senden(kanal) {
+  // Immer direkt den Chat mit Neïssa öffnen (WhatsApp) bzw. die Mail-Auswahl.
+  // WhatsApp-Links können nur Text tragen, das Bild hängt der Kunde im Chat an.
   const text = wunschText(), note = $("#wNote");
-  if (bild && navigator.canShare && navigator.canShare({ files: [bild] })) {
-    try {
-      await navigator.share({ files: [bild], text, title: t("subjWish") });
-      note.dataset.ok = ""; note.textContent = t("noteShare") + (kanal === "wa" ? SHOP.whatsappAnzeige : SHOP.email) + ".";
-      return;
-    } catch (err) { if (err && err.name === "AbortError") return; }
-  }
   const a = document.createElement("a");
   if (kanal === "wa") { a.href = waLink(text); a.target = "_blank"; a.rel = "noopener"; }
   else a.href = mailLink(t("subjWish"), text);
   document.body.appendChild(a); a.click(); a.remove();
-  note.removeAttribute("data-ok");
   note.textContent = bild ? t("noteImg") : t("noteNoImg");
 }
 $("#wSendWa").addEventListener("click", () => senden("wa"));
