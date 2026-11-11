@@ -68,6 +68,22 @@
   ],
   "produkte": [
     {
+      "id": "orange",
+      "kat": "dessert",
+      "a": "Orange",
+      "b": "Velours",
+      "foto": "bilder/orange-velours.jpg",
+      "fr": "La gourmandise fond dans l’air.",
+      "de": "Süßer Genuss, der in der Luft zergeht.",
+      "en": "Sweet indulgence melting into the air.",
+      "duft": {
+        "de": "Orange und  Kinder",
+        "fr": "",
+        "en": ""
+      },
+      "preis": "12,99€  150 ml"
+    },
+    {
       "id": "perle",
       "kat": "dessert",
       "a": "Perle des",
@@ -81,17 +97,7 @@
         "fr": "Menthe coco",
         "en": ""
       },
-      "preis": "14,99"
-    },
-    {
-      "id": "orange",
-      "kat": "dessert",
-      "a": "Orange",
-      "b": "Velours",
-      "foto": "bilder/orange-velours.jpg",
-      "fr": "La gourmandise fond dans l’air.",
-      "de": "Süßer Genuss, der in der Luft zergeht.",
-      "en": "Sweet indulgence melting into the air."
+      "preis": "14,99€  250 ml"
     },
     {
       "id": "cerise",
@@ -101,7 +107,13 @@
       "foto": "bilder/douceur-de-cerise.jpg",
       "fr": "Un instant gourmand, comme un souvenir sucré.",
       "de": "Ein Genussmoment wie eine süße Erinnerung.",
-      "en": "A treat of a moment, like a sweet memory."
+      "en": "A treat of a moment, like a sweet memory.",
+      "duft": {
+        "de": "Kirche,Vanille und orange",
+        "fr": "",
+        "en": ""
+      },
+      "preis": "19,99€ 250 ml"
     },
     {
       "id": "fraise",
@@ -111,7 +123,13 @@
       "foto": "bilder/fraise-enchantee.jpg",
       "fr": "Croquez la magie, laissez brûler le désir.",
       "de": "Beiß in die Magie, lass die Sehnsucht brennen.",
-      "en": "Bite into the magic, let desire burn."
+      "en": "Bite into the magic, let desire burn.",
+      "duft": {
+        "de": "Erdbeeren und coco",
+        "fr": "",
+        "en": ""
+      },
+      "preis": "14,99€ 250 ml"
     },
     {
       "id": "sweet",
@@ -121,7 +139,13 @@
       "foto": "bilder/sweet-paradise.jpg",
       "fr": "Une douceur fruitée, une fraîcheur sucrée, un instant de pur bonheur.",
       "de": "Fruchtig, frisch und süß: ein Moment purer Freude.",
-      "en": "Fruity, fresh and sweet: a moment of pure joy."
+      "en": "Fruity, fresh and sweet: a moment of pure joy.",
+      "duft": {
+        "de": "Bubblegum und Erdbeeren",
+        "fr": "",
+        "en": ""
+      },
+      "preis": "12,99€ 150 ml"
     },
     {
       "id": "lunaire",
@@ -131,7 +155,13 @@
       "foto": "bilder/rose-lunaire.jpg",
       "fr": "Éveille ton intuition, écoute ton âme.",
       "de": "Weck deine Intuition, hör auf deine Seele.",
-      "en": "Awaken your intuition, listen to your soul."
+      "en": "Awaken your intuition, listen to your soul.",
+      "duft": {
+        "de": "Friends sun",
+        "fr": "",
+        "en": ""
+      },
+      "preis": "19,99€ 400ml"
     },
     {
       "id": "menthe",
@@ -141,7 +171,13 @@
       "foto": "bilder/brise-de-menthe.jpg",
       "fr": "La fraîcheur des beaux jours, toute l’année.",
       "de": "Die Frische schöner Tage, das ganze Jahr.",
-      "en": "The freshness of sunny days, all year round."
+      "en": "The freshness of sunny days, all year round.",
+      "duft": {
+        "de": "Limette",
+        "fr": "",
+        "en": ""
+      },
+      "preis": "15,99€ 250 ml"
     },
     {
       "id": "spritz",
@@ -151,7 +187,13 @@
       "foto": "bilder/golden-spritz.jpg",
       "fr": "Un rayon de soleil, une touche d’élégance.",
       "de": "Ein Sonnenstrahl, ein Hauch Eleganz.",
-      "en": "A ray of sunshine, a touch of elegance."
+      "en": "A ray of sunshine, a touch of elegance.",
+      "duft": {
+        "de": "Cola",
+        "fr": "",
+        "en": ""
+      },
+      "preis": "14,99€ 250 ml"
     },
     {
       "id": "pink",
@@ -161,7 +203,13 @@
       "foto": "bilder/pink-elixir.jpg",
       "fr": "Une fragrance fruitée au charme irrésistible.",
       "de": "Ein fruchtiger Duft mit unwiderstehlichem Charme.",
-      "en": "A fruity fragrance with irresistible charm."
+      "en": "A fruity fragrance with irresistible charm.",
+      "duft": {
+        "de": "Rosen und  Vanille",
+        "fr": "",
+        "en": ""
+      },
+      "preis": "19,99€  400 ml"
     },
     {
       "id": "elegance",
@@ -171,7 +219,13 @@
       "foto": "bilder/golden-elegance.jpg",
       "fr": "Faites pétiller vos instants précieux.",
       "de": "Lass deine kostbaren Momente prickeln.",
-      "en": "Make your precious moments sparkle."
+      "en": "Make your precious moments sparkle.",
+      "duft": {
+        "de": "Champagne",
+        "fr": "",
+        "en": ""
+      },
+      "preis": "20,99€ 250 ml"
     },
     {
       "id": "choco",
@@ -181,7 +235,13 @@
       "foto": "bilder/choco-sensation.jpg",
       "fr": "Laissez-vous séduire par l’intensité du chocolat.",
       "de": "Lass dich von intensiver Schokolade verführen.",
-      "en": "Let the intensity of chocolate seduce you."
+      "en": "Let the intensity of chocolate seduce you.",
+      "duft": {
+        "de": "Cacao",
+        "fr": "",
+        "en": ""
+      },
+      "preis": "12,99€ 150 ml"
     },
     {
       "id": "matcha",
@@ -191,7 +251,13 @@
       "foto": "bilder/matcha-mystique.jpg",
       "fr": "Une gorgée de douceur, un nuage de magie.",
       "de": "Ein Schluck Sanftheit, eine Wolke Magie.",
-      "en": "A sip of softness, a cloud of magic."
+      "en": "A sip of softness, a cloud of magic.",
+      "duft": {
+        "de": "Matcha und Milch",
+        "fr": "",
+        "en": ""
+      },
+      "preis": "20,99€  400 ml"
     },
     {
       "id": "rose",
@@ -201,7 +267,13 @@
       "foto": "bilder/rose-eternelle-deko.jpg",
       "fr": "L’élégance d’une rose pour un amour qui dure toujours.",
       "de": "Die Eleganz einer Rose für eine Liebe, die für immer bleibt.",
-      "en": "The elegance of a rose for a love that lasts forever."
+      "en": "The elegance of a rose for a love that lasts forever.",
+      "preis": "24,99€ 300ml",
+      "duft": {
+        "de": "Liebe",
+        "fr": "",
+        "en": ""
+      }
     },
     {
       "id": "reve",
@@ -211,7 +283,13 @@
       "foto": "bilder/reve-fleuri.jpg",
       "fr": "Une douceur florale qui fait naître les plus beaux rêves.",
       "de": "Blumige Sanftheit für die schönsten Träume.",
-      "en": "A floral softness that awakens the sweetest dreams."
+      "en": "A floral softness that awakens the sweetest dreams.",
+      "duft": {
+        "de": "Rose und Himmel",
+        "fr": "",
+        "en": ""
+      },
+      "preis": "24,99€ 300 ml"
     },
     {
       "id": "ecrin",
@@ -221,7 +299,13 @@
       "foto": "bilder/ecrin-de-nature.jpg",
       "fr": "Une lumière qui révèle la beauté du naturel.",
       "de": "Ein Licht, das die Schönheit der Natur zeigt.",
-      "en": "A light that reveals the beauty of nature."
+      "en": "A light that reveals the beauty of nature.",
+      "duft": {
+        "de": "Garten",
+        "fr": "",
+        "en": ""
+      },
+      "preis": "24,99€ 300 ml"
     },
     {
       "id": "ocean",
@@ -231,7 +315,13 @@
       "foto": "bilder/ocean-de-cristal.jpg",
       "fr": "Laissez-vous envelopper par la fraîcheur de l’océan.",
       "de": "Lass dich von der Frische des Ozeans umhüllen.",
-      "en": "Let the freshness of the ocean wrap around you."
+      "en": "Let the freshness of the ocean wrap around you.",
+      "duft": {
+        "de": "Meer",
+        "fr": "",
+        "en": ""
+      },
+      "preis": "12,99€ 150 ml"
     },
     {
       "id": "florale",
@@ -241,7 +331,8 @@
       "foto": "bilder/florale.jpg",
       "fr": "Une étreinte de fleurs pour un instant de sérénité.",
       "de": "Eine Umarmung aus Blüten für einen Moment der Ruhe.",
-      "en": "An embrace of flowers for a moment of serenity."
+      "en": "An embrace of flowers for a moment of serenity.",
+      "preis": "14,99€ 250 ml"
     },
     {
       "id": "nectar",
@@ -251,7 +342,13 @@
       "foto": "bilder/nectar-solaire.jpg",
       "fr": "La chaleur d’un soir d’été.",
       "de": "Die Wärme eines Sommerabends.",
-      "en": "The warmth of a summer evening."
+      "en": "The warmth of a summer evening.",
+      "duft": {
+        "de": "Zimt und orange",
+        "fr": "",
+        "en": ""
+      },
+      "preis": "29,99€ 500 ml"
     },
     {
       "id": "amour",
@@ -261,7 +358,8 @@
       "foto": "bilder/amour-intemporel.jpg",
       "fr": "Deux cœurs, une seule histoire.",
       "de": "Zwei Herzen, eine Geschichte.",
-      "en": "Two hearts, one story."
+      "en": "Two hearts, one story.",
+      "preis": "14,99€"
     },
     {
       "id": "folie",
@@ -276,7 +374,8 @@
       },
       "fr": "Une bougie romantique et intemporelle.",
       "de": "Eine romantische, zeitlose Kerze.",
-      "en": "A romantic, timeless candle."
+      "en": "A romantic, timeless candle.",
+      "preis": "14,99€ 250ml"
     },
     {
       "id": "potion",
@@ -291,7 +390,8 @@
       },
       "fr": "Une bougie envoûtante pour une ambiance passionnée.",
       "de": "Eine betörende Kerze für leidenschaftliche Stimmung.",
-      "en": "A bewitching candle for a passionate mood."
+      "en": "A bewitching candle for a passionate mood.",
+      "preis": "14,99€ 250ml"
     },
     {
       "id": "rose2",
@@ -306,7 +406,8 @@
       },
       "fr": "L’élégance d’une rose pour un amour qui dure toujours.",
       "de": "Die Eleganz einer Rose für eine Liebe, die für immer bleibt.",
-      "en": "The elegance of a rose for a love that lasts forever."
+      "en": "The elegance of a rose for a love that lasts forever.",
+      "preis": "14,99€ 250ml"
     },
     {
       "id": "rouge",
@@ -316,7 +417,8 @@
       "foto": "bilder/rouge-desir.jpg",
       "fr": "Une fragrance envoûtante, une passion à fleur de peau.",
       "de": "Ein betörender Duft, Leidenschaft zum Greifen nah.",
-      "en": "A captivating fragrance, passion at your fingertips."
+      "en": "A captivating fragrance, passion at your fingertips.",
+      "preis": "24,99€  300ml"
     }
   ],
   "geschenke": [
