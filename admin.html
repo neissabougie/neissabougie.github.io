@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Neïssa Bougie · Verwaltung</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400&family=Pinyon+Script&family=Jost:wght@300;400;500&display=swap">
+<style>
+:root {
+  --paper: #fbfaf8; --card: #ffffff; --ink: #141113; --soft: #6b6468; --line: #ddd7d4; --blush: #f2e6e4;
+  --ok: #1c7c4a; --bad: #b3261e; --warn: #9a6a00;
+  --f-display: "Bodoni Moda", Georgia, serif; --f-script: "Pinyon Script", cursive; --f-body: "Jost", system-ui, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+header { background: var(--ink); color: var(--paper); position: sticky; top: 0; z-index: 5; }
+header .wrap { display: flex; align-items: center; gap: 12px; padding-block: 10px; flex-wrap: wrap; }
+header h1 { font-family: var(--f-display); font-weight: 500; font-size: 1.1rem; letter-spacing: .2em; text-transform: uppercase; margin: 0; flex: 1; min-width: 180px; }
+header h1 small { font-family: var(--f-body); letter-spacing: .1em; font-size: .75rem; opacity: .7; display: block; text-transform: none; }
+button, .btn { font: inherit; font-size: .92rem; border-radius: 999px; border: 1px solid var(--ink); background: var(--card); color: var(--ink); padding: 8px 16px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+button.primary { background: var(--ink); color: var(--paper); }
+header button.primary { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+header button.primary:disabled { opacity: .45; cursor: default; }
+header a.btn { background: transparent; color: var(--paper); border-color: rgba(255,255,255,.4); }
+button.danger { border-color: var(--bad); color: var(--bad); }
+button.small { padding: 4px 10px; font-size: .82rem; }
+button:disabled { opacity: .45; cursor: default; }
+.status { font-size: .88rem; padding: 10px 14px; border-radius: 10px; margin: 14px 0; }
+.status.ok { background: #e6f3ec; color: var(--ok); }
+.status.bad { background: #fbe9e7; color: var(--bad); }
+.status.info { background: var(--blush); }
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; margin: 20px 0; }
+.panel h2 { font-family: var(--f-display); font-weight: 500; margin: 0 0 8px; }
+.panel ol { padding-left: 20px; } .panel li { margin: 6px 0; }
+label { display: block; font-size: .82rem; color: var(--soft); margin: 12px 0 4px; letter-spacing: .04em; }
+input[type=text], input[type=password], textarea, select { width: 100%; font: inherit; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); }
+textarea { min-height: 64px; resize: vertical; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
+@media (max-width: 560px) { .row { grid-template-columns: 1fr; } }
+.check { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: .95rem; color: var(--ink); }
+.check input { width: 20px; height: 20px; }
+.toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 20px 0 6px; }
+.hint { color: var(--soft); font-size: .88rem; }
+.cat { background: var(--card); border: 1px solid var(--line); border-radius: 16px; margin: 18px 0; overflow: hidden; }
+.cat.off { opacity: .6; }
+.cat-head { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.cat-head h3 { font-family: var(--f-display); font-weight: 500; font-size: 1.35rem; margin: 0; flex: 1; min-width: 140px; }
+.cat-head h3 .n { font-family: var(--f-body); font-size: .8rem; color: var(--soft); margin-left: 6px; }
+.badge { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; background: var(--blush); padding: 2px 8px; border-radius: 999px; color: var(--ink); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; padding: 16px; }
+.item { border: 1px solid var(--line); border-radius: 12px; background: #fff; padding: 0; text-align: left; display: flex; flex-direction: column; overflow: hidden; color: inherit; }
+.item.off { opacity: .5; }
+.item .ph { aspect-ratio: 4/5; background: var(--blush); display: flex; width: 100%; }
+.item .ph img { width: 100%; height: 100%; object-fit: cover; display: block; min-width: 0; }
+.item .ph.duo img { width: 50%; }
+.item .tx { padding: 8px 10px 10px; }
+.item .a { font-family: var(--f-display); text-transform: uppercase; font-size: .82rem; letter-spacing: .05em; display: block; }
+.item .b { font-family: var(--f-script); font-size: 1.3rem; line-height: 1.1; display: block; }
+.item .p { font-size: .82rem; color: var(--soft); }
+.item.add { align-items: center; justify-content: center; border-style: dashed; min-height: 180px; text-align: center; color: var(--soft); font-size: .95rem; }
+.item.add span { font-size: 2rem; line-height: 1; display: block; }
+.sheet-bg { position: fixed; inset: 0; background: rgba(20,17,19,.5); z-index: 20; display: flex; align-items: flex-end; justify-content: center; }
+@media (min-width: 700px) { .sheet-bg { align-items: center; } }
+.sheet { background: var(--paper); width: 100%; max-width: 640px; max-height: 92vh; overflow: auto; border-radius: 18px 18px 0 0; padding: 20px 18px 24px; }
+@media (min-width: 700px) { .sheet { border-radius: 18px; } }
+.sheet h2 { font-family: var(--f-display); font-weight: 500; margin: 0 0 4px; font-size: 1.5rem; }
+.sheet fieldset { border: 1px solid var(--line); border-radius: 12px; margin: 16px 0 0; padding: 4px 14px 14px; }
+.sheet legend { font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; padding: 0 6px; }
+.sheet .acts { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+.sheet .acts .sp { flex: 1; }
+.foto { display: flex; gap: 14px; align-items: center; margin-top: 8px; }
+.foto .pv { width: 96px; aspect-ratio: 4/5; background: var(--blush) center/cover; border-radius: 10px; flex: none; }
+.foto input { font-size: .85rem; }
+.spin { display: inline-block; width: 14px; height: 14px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: s .8s linear infinite; }
+@keyframes s { to { transform: rotate(360deg); } }
+footer { color: var(--soft); font-size: .82rem; padding: 30px 0 50px; }
+footer button { font-size: .8rem; }
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <h1>Neïssa Bougie<small>Verwaltung des Katalogs</small></h1>
+  <a class="btn" href="./" target="_blank" rel="noopener">Website ansehen</a>
+  <button class="primary" id="publish" type="button" hidden disabled>Veröffentlichen</button>
+</div></header>
+
+<main class="wrap">
+  <div id="msg" class="status" hidden></div>
+
+  <section id="login" class="panel" hidden>
+    <h2>Einmalig anmelden</h2>
+    <p>Damit diese Seite Änderungen auf der Website speichern darf, braucht sie einen <b>GitHub-Schlüssel</b> (Token). Den legst du einmal an. Er bleibt danach auf diesem Gerät gespeichert.</p>
+    <ol>
+      <li>Öffne <a href="https://github.com/settings/tokens/new?scopes=public_repo&description=Neissa%20Bougie%20Verwaltung" target="_blank" rel="noopener">github.com/settings/tokens/new</a> und melde dich mit dem GitHub-Konto an, das die Website verwaltet.</li>
+      <li>Bei <b>Note</b> steht schon „Neissa Bougie Verwaltung“. Bei <b>Expiration</b> wähle z. B. „1 year“ oder „No expiration“.</li>
+      <li>Der Haken bei <b>public_repo</b> ist schon gesetzt. Sonst nichts ankreuzen.</li>
+      <li>Ganz unten auf <b>Generate token</b> tippen und den Schlüssel (beginnt mit <code>ghp_</code>) kopieren.</li>
+      <li>Hier einfügen und auf „Anmelden“ tippen.</li>
+    </ol>
+    <label for="tok">GitHub-Schlüssel</label>
+    <input id="tok" type="password" autocomplete="off" placeholder="ghp_…">
+    <div class="toolbar"><button class="primary" id="loginBtn" type="button">Anmelden</button></div>
+    <p class="hint">Gib diesen Schlüssel niemandem weiter. Wer ihn hat, kann die Website ändern.</p>
+  </section>
+
+  <section id="app" hidden>
+    <div class="toolbar">
+      <button id="addCat" type="button">+ Neue Kategorie</button>
+      <span class="hint" id="dirtyHint">Tippe auf eine Kerze, um sie zu ändern. Änderungen gehen erst mit „Veröffentlichen“ online.</span>
+    </div>
+    <div id="cats"></div>
+  </section>
+
+  <footer>
+    <span>Angemeldet auf diesem Gerät.</span>
+    <button id="logout" type="button" hidden>Abmelden</button>
+  </footer>
+</main>
+
+<div class="sheet-bg" id="sheetBg" hidden></div>
+
+<script>
+const REPO = "neissabougie/neissabougie.github.io";
+const BRANCH = "main";
+const API = "https://api.github.com/repos/" + REPO + "/contents/";
+const TOKEN_KEY = "neissa-admin-token";
+
+const $ = (s, r = document) => r.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+let token = "";
+try { token = localStorage.getItem(TOKEN_KEY) || ""; } catch {}
+
+let data = null, sha = null, dirty = false;
+const neueFotos = new Map();   // Pfad -> Blob (noch nicht hochgeladen)
+const vorschau = new Map();    // Pfad -> Object-URL
+
+function zeige(text, art = "info") { const m = $("#msg"); m.className = "status " + art; m.innerHTML = text; m.hidden = !text; }
+function setDirty(v = true) {
+  dirty = v;
+  $("#publish").disabled = !v;
+  $("#dirtyHint").textContent = v ? "Du hast Änderungen, die noch nicht online sind. Tippe oben auf „Veröffentlichen“." : "Tippe auf eine Kerze, um sie zu ändern. Änderungen gehen erst mit „Veröffentlichen“ online.";
+}
+addEventListener("beforeunload", (e) => { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+
+// ---------- GitHub ----------
+async function gh(pfad, opt = {}) {
+  const r = await fetch(API + pfad + (opt.method ? "" : "?ref=" + BRANCH + "&t=" + Date.now()), {
+    ...opt, headers: { Authorization: "Bearer " + token, Accept: "application/vnd.github+json", ...(opt.headers || {}) }
+  });
+  let j = null; try { j = await r.json(); } catch {}
+  if (!r.ok) { const e = new Error((j && j.message) || r.status); e.status = r.status; throw e; }
+  return j;
+}
+const b64Text = (s) => { const b = new TextEncoder().encode(s); let x = ""; for (let i = 0; i < b.length; i += 0x8000) x += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000)); return btoa(x); };
+const textB64 = (b) => new TextDecoder().decode(Uint8Array.from(atob(b.replace(/\n/g, "")), c => c.charCodeAt(0)));
+const blobB64 = (blob) => new Promise((ok, no) => { const f = new FileReader(); f.onload = () => ok(String(f.result).split(",")[1]); f.onerror = no; f.readAsDataURL(blob); });
+
+async function anmelden(t) {
+  token = t.trim();
+  zeige('<span class="spin"></span> Verbinde mit GitHub …');
+  try {
+    const repo = await fetch("https://api.github.com/repos/" + REPO, { headers: { Authorization: "Bearer " + token } }).then(r => r.ok ? r.json() : Promise.reject(r.status));
+    if (!repo.permissions || !repo.permissions.push) throw "nopush";
+    try { localStorage.setItem(TOKEN_KEY, token); } catch {}
+    await laden();
+  } catch (e) {
+    $("#login").hidden = false; $("#app").hidden = true; $("#publish").hidden = true;
+    zeige(e === "nopush" ? "Der Schlüssel funktioniert, aber dieses GitHub-Konto darf die Website nicht ändern. Melde dich mit dem Konto an, dem die Website gehört." : "Anmeldung hat nicht geklappt. Bitte prüfe den Schlüssel (er beginnt mit ghp_) und versuche es noch einmal.", "bad");
+  }
+}
+async function laden() {
+  zeige('<span class="spin"></span> Lade Katalog …');
+  const f = await gh("katalog.json");
+  sha = f.sha;
+  data = JSON.parse(textB64(f.content));
+  data.kategorien ||= []; data.produkte ||= []; data.geschenke ||= [];
+  $("#login").hidden = true; $("#app").hidden = false; $("#publish").hidden = false; $("#logout").hidden = false;
+  zeige("");
+  setDirty(false);
+  render();
+}
+
+// ---------- Hilfen ----------
+const tx = (o) => !o ? "" : typeof o === "string" ? o : (o.de || o.fr || o.en || "");
+const voll = (p) => ((p.a || "") + " " + (p.b || "")).trim();
+const fotoSrc = (p) => vorschau.get(p.foto) || p.foto || "";
+const preisText = (v) => { v = String(v || "").trim(); if (!v) return "Preis auf Anfrage"; return /^\d+([.,]\d{1,2})?$/.test(v) ? Number(v.replace(",", ".")).toLocaleString("de-DE", { style: "currency", currency: "EUR" }) : v; };
+const slug = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "x";
+function neueId(basis, liste) { let id = slug(basis), n = 2; while (liste.some(x => x.id === id)) id = slug(basis) + "-" + n++; return id; }
+const prodById = (id) => data.produkte.find(p => p.id === id);
+const val = (id) => ($("#" + id) || {}).value?.trim() || "";
+const lang3 = (pre) => { const o = { de: val(pre + "De"), fr: val(pre + "Fr"), en: val(pre + "En") }; return (o.de || o.fr || o.en) ? o : undefined; };
+
+// ---------- Übersicht ----------
+function render() {
+  $("#cats").innerHTML = data.kategorien.map((k, ki) => {
+    const off = k.sichtbar === false;
+    const istG = k.id === "geschenk";
+    const items = istG ? data.geschenke.map((g, i) => ({ g, i })) : data.produkte.map((p, i) => ({ p, i })).filter(x => x.p.kat === k.id);
+    return `<section class="cat${off ? " off" : ""}">
+      <div class="cat-head">
+        <h3>${esc(tx(k.name))}<span class="n">${items.length} ${istG ? "Sets" : "Kerzen"}</span></h3>
+        ${off ? '<span class="badge">ausgeblendet</span>' : ""}
+        <button class="small" type="button" data-catup="${ki}" ${ki === 0 ? "disabled" : ""} aria-label="Kategorie nach oben">↑</button>
+        <button class="small" type="button" data-catdown="${ki}" ${ki === data.kategorien.length - 1 ? "disabled" : ""} aria-label="Kategorie nach unten">↓</button>
+        <button class="small" type="button" data-catedit="${ki}">Kategorie bearbeiten</button>
+      </div>
+      <div class="grid">
+        ${items.map(x => x.g ? `
+          <button class="item${x.g.sichtbar === false ? " off" : ""}" type="button" data-gedit="${x.i}">
+            <span class="ph duo">${(x.g.kerzen || []).map(id => prodById(id)).filter(Boolean).map(p => `<img src="${esc(fotoSrc(p))}" alt="">`).join("")}</span>
+            <span class="tx"><span class="a">${esc(x.g.a)}</span><span class="b">${esc(x.g.b)}</span><span class="p">${esc(preisText(x.g.preis))}${x.g.sichtbar === false ? " · ausgeblendet" : ""}</span></span>
+          </button>` : `
+          <button class="item${x.p.sichtbar === false ? " off" : ""}" type="button" data-pedit="${x.i}">
+            <span class="ph">${x.p.foto ? `<img src="${esc(fotoSrc(x.p))}" alt="" loading="lazy">` : ""}</span>
+            <span class="tx"><span class="a">${esc(x.p.a)}</span><span class="b">${esc(x.p.b)}</span><span class="p">${esc(preisText(x.p.preis))}${x.p.sichtbar === false ? " · ausgeblendet" : ""}</span></span>
+          </button>`).join("")}
+        <button class="item add" type="button" ${istG ? 'data-gnew="1"' : `data-pnew="${esc(k.id)}"`}><span>+</span>${istG ? "Geschenkset hinzufügen" : "Kerze hinzufügen"}</button>
+      </div>
+    </section>`;
+  }).join("");
+}
+
+// ---------- Bearbeiten-Fenster ----------
+function sheet(html) {
+  const bg = $("#sheetBg");
+  bg.innerHTML = `<div class="sheet" role="dialog" aria-modal="true">${html}</div>`;
+  bg.hidden = false; document.body.style.overflow = "hidden";
+  const f = bg.querySelector("input[type=text]"); if (f) f.focus({ preventScroll: true });
+}
+function zu() { $("#sheetBg").hidden = true; $("#sheetBg").innerHTML = ""; document.body.style.overflow = ""; }
+$("#sheetBg").addEventListener("click", (e) => { if (e.target.id === "sheetBg" || e.target.closest("[data-close]")) zu(); });
+addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("#sheetBg").hidden) zu(); });
+const feld = (id, label, wert, ph = "") => `<label for="${id}">${label}</label><input type="text" id="${id}" value="${esc(wert)}" placeholder="${esc(ph)}">`;
+const feldT = (id, label, wert, ph = "") => `<label for="${id}">${label}</label><textarea id="${id}" placeholder="${esc(ph)}">${esc(wert)}</textarea>`;
+const drei = (pre, titel, o = {}, area, ph = {}) => `<fieldset><legend>${titel}</legend>
+  ${(area ? feldT : feld)(pre + "De", "Deutsch", (o || {}).de, ph.de)}
+  ${(area ? feldT : feld)(pre + "Fr", "Französisch (optional)", (o || {}).fr, ph.fr)}
+  ${(area ? feldT : feld)(pre + "En", "Englisch (optional)", (o || {}).en, ph.en)}
+</fieldset>`;
+const sichtbarBox = (an) => `<label class="check"><input type="checkbox" id="fSicht" ${an !== false ? "checked" : ""}> Auf der Website zeigen</label>`;
+
+// Kategorie
+function katForm(ki) {
+  const neu = ki == null, k = neu ? { name: {}, text: {} } : data.kategorien[ki];
+  sheet(`<h2>${neu ? "Neue Kategorie" : "Kategorie bearbeiten"}</h2>
+    <p class="hint">Zum Beispiel „Weihnachten“. Die anderen Sprachen sind freiwillig. Fehlt eine, zeigt die Website den deutschen Text.</p>
+    ${drei("kN", "Name", k.name, false, { de: "z. B. Weihnachten", fr: "ex. Noël", en: "e.g. Christmas" })}
+    ${drei("kT", "Kurzer Text unter dem Namen", k.text, true, { de: "z. B. Warme Düfte für die schönste Zeit des Jahres." })}
+    ${sichtbarBox(k.sichtbar)}
+    <p class="hint">Tipp: Eine Saison-Kategorie kannst du nach Weihnachten einfach ausblenden, statt sie zu löschen.</p>
+    <div class="acts">
+      ${!neu && k.id !== "geschenk" ? `<button class="danger" type="button" data-katdel="${ki}">Löschen</button>` : ""}
+      <span class="sp"></span>
+      <button type="button" data-close>Abbrechen</button>
+      <button class="primary" type="button" data-catsave="${neu ? "" : ki}">Übernehmen</button>
+    </div>`);
+}
+function katSpeichern(ki) {
+  const name = lang3("kN");
+  if (!name) { alert("Bitte gib mindestens einen Namen ein."); return; }
+  const k = ki === "" ? { id: neueId(name.de || name.fr || name.en, data.kategorien) } : data.kategorien[+ki];
+  k.name = name; k.text = lang3("kT") || { de: "" };
+  if ($("#fSicht").checked) delete k.sichtbar; else k.sichtbar = false;
+  if (ki === "") data.kategorien.unshift(k);
+  zu(); setDirty(); render();
+  if (ki === "") zeige(`Kategorie „${esc(tx(k.name))}“ ist angelegt (ganz oben). Füge jetzt Kerzen hinzu und tippe danach auf „Veröffentlichen“.`, "ok");
+}
+function katLoeschen(ki) {
+  const k = data.kategorien[ki], n = data.produkte.filter(p => p.kat === k.id).length;
+  if (!confirm(`Kategorie „${tx(k.name)}“ löschen?` + (n ? `\n\nDie ${n} Kerzen darin werden mitgelöscht.` : ""))) return;
+  const weg = new Set(data.produkte.filter(p => p.kat === k.id).map(p => p.id));
+  data.produkte = data.produkte.filter(p => p.kat !== k.id);
+  data.geschenke.forEach(g => { if ((g.kerzen || []).some(id => weg.has(id))) g.kerzen = g.kerzen.filter(id => !weg.has(id)); });
+  data.kategorien.splice(ki, 1);
+  zu(); setDirty(); render();
+}
+
+// Kerze
+let fotoDatei = null;
+function prodForm(i, kat) {
+  const neu = i == null, p = neu ? { kat } : data.produkte[i];
+  fotoDatei = null;
+  const katOpt = data.kategorien.filter(k => k.id !== "geschenk").map(k => `<option value="${esc(k.id)}" ${k.id === p.kat ? "selected" : ""}>${esc(tx(k.name))}</option>`).join("");
+  sheet(`<h2>${neu ? "Neue Kerze" : esc(voll(p))}</h2>
+    <label for="fKat">Kategorie</label><select id="fKat">${katOpt}</select>
+    <div class="row">
+      <div>${feld("fA", "Name, 1. Zeile (Großbuchstaben)", p.a, "z. B. Douceur de")}</div>
+      <div>${feld("fB", "Name, 2. Zeile (Schreibschrift)", p.b, "z. B. Noël")}</div>
+    </div>
+    ${feld("fPreis", "Preis in Euro (leer = „auf Anfrage“)", p.preis, "z. B. 24,90")}
+    <label>Foto</label>
+    <div class="foto"><div class="pv" id="fPv" style="${p.foto ? `background-image:url('${esc(fotoSrc(p))}')` : ""}"></div>
+      <div><input type="file" id="fFoto" accept="image/*"><div class="hint">Am besten hochkant. Wird automatisch verkleinert.</div></div></div>
+    <fieldset><legend>Slogan</legend>
+      ${feld("sFr", "Französisch (steht auf der Karte)", p.fr, "z. B. La magie de Noël dans chaque flamme.")}
+      ${feld("sDe", "Deutsch", p.de)}
+      ${feld("sEn", "Englisch (optional)", p.en)}
+    </fieldset>
+    ${drei("dU", "Duft (optional)", p.duft, false, { de: "z. B. Zimt & Orange" })}
+    ${sichtbarBox(p.sichtbar)}
+    <div class="acts">
+      ${neu ? "" : `<button class="danger" type="button" data-pdel="${i}">Löschen</button>
+      <button type="button" data-pup="${i}" aria-label="Nach vorne">← Nach vorne</button>
+      <button type="button" data-pdown="${i}" aria-label="Nach hinten">Nach hinten →</button>`}
+      <span class="sp"></span>
+      <button type="button" data-close>Abbrechen</button>
+      <button class="primary" type="button" data-psave="${neu ? "" : i}">Übernehmen</button>
+    </div>`);
+}
+async function verkleinern(file) {
+  const bmp = await createImageBitmap(file);
+  const f = Math.min(1, 1400 / Math.max(bmp.width, bmp.height));
+  const c = document.createElement("canvas"); c.width = Math.round(bmp.width * f); c.height = Math.round(bmp.height * f);
+  c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+  return await new Promise((ok, no) => c.toBlob(b => b ? ok(b) : no(), "image/jpeg", 0.85));
+}
+document.addEventListener("change", async (e) => {
+  if (e.target.id !== "fFoto") return;
+  const f = e.target.files && e.target.files[0]; if (!f) return;
+  try { fotoDatei = await verkleinern(f); } catch { fotoDatei = f; }
+  $("#fPv").style.backgroundImage = `url("${URL.createObjectURL(fotoDatei)}")`;
+});
+function prodSpeichern(i) {
+  const a = val("fA"), b = val("fB");
+  if (!a && !b) { alert("Bitte gib einen Namen ein."); return; }
+  const neu = i === "";
+  if (neu && !fotoDatei) { alert("Bitte wähle ein Foto für die Kerze."); return; }
+  const p = neu ? { id: neueId(a + " " + b, data.produkte) } : data.produkte[+i];
+  p.kat = val("fKat"); p.a = a; p.b = b;
+  p.fr = val("sFr"); p.de = val("sDe"); p.en = val("sEn");
+  const duft = lang3("dU"); if (duft) p.duft = duft; else delete p.duft;
+  const preis = val("fPreis"); if (preis) p.preis = preis; else delete p.preis;
+  if ($("#fSicht").checked) delete p.sichtbar; else p.sichtbar = false;
+  if (fotoDatei) {
+    const pfad = "bilder/" + p.id + "-" + Date.now().toString(36) + ".jpg";
+    neueFotos.set(pfad, fotoDatei); vorschau.set(pfad, URL.createObjectURL(fotoDatei));
+    p.foto = pfad;
+  }
+  if (neu) data.produkte.push(p);
+  zu(); setDirty(); render();
+}
+function prodLoeschen(i) {
+  const p = data.produkte[i];
+  const inSets = data.geschenke.filter(g => (g.kerzen || []).includes(p.id));
+  if (!confirm(`„${voll(p)}“ löschen?` + (inSets.length ? `\n\nAchtung: Sie steckt in ${inSets.length} Geschenkset(s). Diese Sets werden ausgeblendet, bis du eine andere Kerze wählst.` : ""))) return;
+  inSets.forEach(g => { if (!g.frei) g.sichtbar = false; g.kerzen = g.kerzen.filter(id => id !== p.id); });
+  data.produkte.splice(i, 1);
+  zu(); setDirty(); render();
+}
+function prodVerschieben(i, dir) {
+  const p = data.produkte[i], L = data.produkte;
+  let j = i + dir; while (j >= 0 && j < L.length && L[j].kat !== p.kat) j += dir;
+  if (j < 0 || j >= L.length) return;
+  [L[i], L[j]] = [L[j], L[i]];
+  setDirty(); render(); prodForm(j);
+}
+
+// Geschenkset
+function kerzenSelect(id, sel) {
+  return `<select id="${id}">${data.kategorien.filter(k => k.id !== "geschenk").map(k => `<optgroup label="${esc(tx(k.name))}">${data.produkte.filter(p => p.kat === k.id).map(p => `<option value="${esc(p.id)}" ${p.id === sel ? "selected" : ""}>${esc(voll(p))}</option>`).join("")}</optgroup>`).join("")}</select>`;
+}
+function geschenkForm(i) {
+  const neu = i == null, g = neu ? { a: "Coffret", kerzen: [] } : data.geschenke[i];
+  const k = g.kerzen || [];
+  sheet(`<h2>${neu ? "Neues Geschenkset" : esc(voll(g))}</h2>
+    <div class="row">
+      <div>${feld("fA", "Name, 1. Zeile", g.a, "Coffret")}</div>
+      <div>${feld("fB", "Name, 2. Zeile (Schreibschrift)", g.b, "z. B. Noël Doré")}</div>
+    </div>
+    ${feld("fPreis", "Preis in Euro (leer = „auf Anfrage“)", g.preis, "z. B. 49,90")}
+    <div class="row">
+      <div><label for="gK1">${g.frei ? "Vorauswahl Kerze 1" : "Kerze 1"}</label>${kerzenSelect("gK1", k[0])}</div>
+      <div><label for="gK2">${g.frei ? "Vorauswahl Kerze 2" : "Kerze 2"}</label>${kerzenSelect("gK2", k[1] || (data.produkte[1] || {}).id)}</div>
+    </div>
+    ${g.frei ? '<p class="hint">Bei diesem Set wählen die Kunden Kerzen, Schokolade und Wein selbst aus.</p>' : `
+    ${feld("gSchoko", "Schokolade", tx(g.schoko), "z. B. Zartbitter-Pralinen")}
+    ${feld("gWein", "Wein", tx(g.wein), "z. B. Kleiner Rotwein (20 cl)")}
+    ${feld("gAnlass", "Ideal für", tx(g.anlass), "z. B. Weihnachten, Dankeschön")}`}
+    <fieldset><legend>Slogan</legend>
+      ${feld("sFr", "Französisch", g.fr)}${feld("sDe", "Deutsch", g.de)}${feld("sEn", "Englisch (optional)", g.en)}
+    </fieldset>
+    ${sichtbarBox(g.sichtbar)}
+    <div class="acts">
+      ${neu ? "" : `<button class="danger" type="button" data-gdel="${i}">Löschen</button>`}
+      <span class="sp"></span>
+      <button type="button" data-close>Abbrechen</button>
+      <button class="primary" type="button" data-gsave="${neu ? "" : i}">Übernehmen</button>
+    </div>`);
+}
+function geschenkSpeichern(i) {
+  const neu = i === "", g = neu ? {} : data.geschenke[+i];
+  g.a = val("fA") || "Coffret"; g.b = val("fB");
+  if (!g.b) { alert("Bitte gib einen Namen ein."); return; }
+  g.kerzen = [val("gK1"), val("gK2")];
+  if (!g.frei) {
+    // Nur die deutsche Angabe wird geändert, andere Sprachen bleiben, wenn sie gleich waren
+    const setz = (key, v) => { const alt = g[key] && typeof g[key] === "object" ? g[key] : {}; g[key] = tx(alt) === v ? alt : { de: v }; };
+    setz("schoko", val("gSchoko")); setz("wein", val("gWein")); setz("anlass", val("gAnlass"));
+  }
+  g.fr = val("sFr"); g.de = val("sDe"); g.en = val("sEn");
+  const preis = val("fPreis"); if (preis) g.preis = preis; else delete g.preis;
+  if ($("#fSicht").checked) delete g.sichtbar; else g.sichtbar = false;
+  if (neu) data.geschenke.push(g);
+  zu(); setDirty(); render();
+}
+
+// ---------- Klicks ----------
+document.addEventListener("click", (e) => {
+  const b = e.target.closest("button"); if (!b) return;
+  const d = b.dataset;
+  if (b.id === "addCat") katForm();
+  else if (d.catedit != null) katForm(+d.catedit);
+  else if (d.catsave != null) katSpeichern(d.catsave);
+  else if (d.katdel != null) katLoeschen(+d.katdel);
+  else if (d.catup != null || d.catdown != null) { const i = +(d.catup ?? d.catdown), j = d.catup != null ? i - 1 : i + 1; const K = data.kategorien; [K[i], K[j]] = [K[j], K[i]]; setDirty(); render(); }
+  else if (d.pnew != null) prodForm(null, d.pnew);
+  else if (d.pedit != null) prodForm(+d.pedit);
+  else if (d.psave != null) prodSpeichern(d.psave);
+  else if (d.pdel != null) prodLoeschen(+d.pdel);
+  else if (d.pup != null) prodVerschieben(+d.pup, -1);
+  else if (d.pdown != null) prodVerschieben(+d.pdown, 1);
+  else if (d.gnew != null) geschenkForm(null);
+  else if (d.gedit != null) geschenkForm(+d.gedit);
+  else if (d.gsave != null) geschenkSpeichern(d.gsave);
+  else if (d.gdel != null) { if (confirm("Geschenkset löschen?")) { data.geschenke.splice(+d.gdel, 1); zu(); setDirty(); render(); } }
+});
+$("#loginBtn").addEventListener("click", () => anmelden($("#tok").value));
+$("#tok").addEventListener("keydown", (e) => { if (e.key === "Enter") anmelden($("#tok").value); });
+$("#logout").addEventListener("click", () => {
+  if (dirty && !confirm("Nicht veröffentlichte Änderungen gehen verloren. Trotzdem abmelden?")) return;
+  try { localStorage.removeItem(TOKEN_KEY); } catch {}
+  dirty = false; location.reload();
+});
+
+// ---------- Veröffentlichen ----------
+$("#publish").addEventListener("click", async () => {
+  const btn = $("#publish"); btn.disabled = true;
+  try {
+    const benutzt = new Set(data.produkte.map(p => p.foto));
+    let n = 0;
+    for (const [pfad, blob] of neueFotos) {
+      if (!benutzt.has(pfad)) { neueFotos.delete(pfad); continue; }
+      zeige(`<span class="spin"></span> Lade Foto ${++n} hoch …`);
+      await gh(pfad, { method: "PUT", body: JSON.stringify({ message: "Foto hinzugefügt: " + pfad, content: await blobB64(blob), branch: BRANCH }) });
+      neueFotos.delete(pfad);
+    }
+    zeige('<span class="spin"></span> Speichere Katalog …');
+    const r = await gh("katalog.json", { method: "PUT", body: JSON.stringify({ message: "Katalog aktualisiert (Verwaltung)", content: b64Text(JSON.stringify(data, null, 2) + "\n"), sha, branch: BRANCH }) });
+    sha = r.content.sha;
+    setDirty(false);
+    zeige('Gespeichert! Die Website zeigt die Änderungen in ungefähr 1 bis 2 Minuten. <a href="./" target="_blank" rel="noopener">Website öffnen</a>', "ok");
+  } catch (e) {
+    btn.disabled = false;
+    if (e.status === 409 || e.status === 422) zeige("Der Katalog wurde inzwischen woanders geändert. Bitte lade diese Seite neu und mache die Änderung noch einmal.", "bad");
+    else if (e.status === 401) zeige("Der GitHub-Schlüssel ist abgelaufen oder ungültig. Tippe unten auf „Abmelden“ und melde dich mit einem neuen Schlüssel an.", "bad");
+    else zeige("Speichern hat nicht geklappt (" + esc(e.message) + "). Prüfe die Internetverbindung und versuche es noch einmal.", "bad");
+  }
+});
+
+// ---------- Start ----------
+if (token) anmelden(token); else { $("#login").hidden = false; }
+</script>
+</body>
+</html>

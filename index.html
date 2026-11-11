@@ -69,6 +69,7 @@ section.cat { margin-bottom: 64px; scroll-margin-top: 70px; }
 .pname { line-height: 1; }
 .pname .a { display: block; font-family: var(--f-display); font-weight: 500; font-size: clamp(.95rem, 3.4vw, 1.2rem); letter-spacing: .06em; text-transform: uppercase; }
 .pname .b { display: block; font-family: var(--f-script); font-size: clamp(1.45rem, 5vw, 1.9rem); line-height: 1.1; margin-top: 2px; }
+.prod .preis { font-family: var(--f-body); font-size: .82rem; letter-spacing: .14em; font-weight: 500; margin-top: -4px; }
 .prod .slogan { font-family: var(--f-display); font-style: italic; font-size: .9rem; color: var(--soft); line-height: 1.35; padding-inline: 4px; text-wrap: balance; }
 
 /* Wunschkerze */
@@ -270,10 +271,8 @@ footer .wrap { padding-block: 22px 32px; }
 <script>
 /* =====================================================================
    HIER BEARBEITEN
-   - Neue Kerze: Foto in "bilder" legen und unten einen Block ergänzen:
-     { id, kat, a, b, fr, de, en, foto }  (a = 1. Zeile, b = Schreibschrift,
-     fr/de/en = Slogan in drei Sprachen)
-   - Geschenkset: in GESCHENKE die beiden Kerzen über ihre id angeben.
+   - Kerzen, Kategorien, Preise: über admin.html (speichert katalog.json)
+   - Texte der Seite in drei Sprachen: unten in T
    ===================================================================== */
 const SHOP = {
   name: "Neïssa Bougie",
@@ -286,105 +285,9 @@ const SHOP = {
   cloudinary: { cloud: "y2lztvl2", preset: "wunschkerzen" }
 };
 
-const KATEGORIEN = [
-  { id: "geschenk",  name: { de: "Geschenke", fr: "Coffrets cadeaux", en: "Gift sets" },
-    text: { de: "Zwei Kerzen, feine Schokolade, ein kleiner Wein und deine persönliche Karte. Fertig verpackt.", fr: "Deux bougies, du bon chocolat, une petite bouteille de vin et ta carte personnalisée. Prêt à offrir.", en: "Two candles, fine chocolate, a small bottle of wine and your personal card. Ready to give." } },
-  { id: "dessert",   name: { de: "Dessert", fr: "Dessert", en: "Dessert" },
-    text: { de: "Kerzen, so verführerisch wie ein Dessert. Bitte nur anschauen und riechen.", fr: "Des bougies aussi tentantes qu’un dessert. À regarder et à sentir, pas à manger.", en: "Candles as tempting as dessert. For looking and smelling only." } },
-  { id: "getraenke", name: { de: "Getränke", fr: "Boissons", en: "Drinks" },
-    text: { de: "Cocktails, Spritz und Matcha, gegossen in Wachs.", fr: "Cocktails, spritz et matcha, coulés dans la cire.", en: "Cocktails, spritz and matcha, poured in wax." } },
-  { id: "deko",      name: { de: "Dekoration", fr: "Décoration", en: "Decoration" },
-    text: { de: "Skulpturen, Blüten und Schalen, die jeden Raum verwandeln.", fr: "Sculptures, fleurs et coupelles qui transforment chaque pièce.", en: "Sculptures, flowers and bowls that transform any room." } },
-  { id: "romance",   name: { de: "Romance", fr: "Romance", en: "Romance" },
-    text: { de: "Für Verliebte, Jahrestage und den Valentinstag.", fr: "Pour les amoureux, les anniversaires et la Saint-Valentin.", en: "For lovers, anniversaries and Valentine’s Day." } }
-];
-
-const PRODUKTE = [
-  { id: "perle", kat: "dessert", a: "Perle des", b: "Tropiques", foto: "bilder/perle-des-tropiques.jpg",
-    fr: "Un instant d’évasion à chaque flamme.", de: "Ein Moment Fernweh in jeder Flamme.", en: "A moment of escape with every flame." },
-  { id: "orange", kat: "dessert", a: "Orange", b: "Velours", foto: "bilder/orange-velours.jpg",
-    fr: "La gourmandise fond dans l’air.", de: "Süßer Genuss, der in der Luft zergeht.", en: "Sweet indulgence melting into the air." },
-  { id: "cerise", kat: "dessert", a: "Douceur de", b: "Cerise", foto: "bilder/douceur-de-cerise.jpg",
-    fr: "Un instant gourmand, comme un souvenir sucré.", de: "Ein Genussmoment wie eine süße Erinnerung.", en: "A treat of a moment, like a sweet memory." },
-  { id: "fraise", kat: "dessert", a: "La Fraise", b: "Enchantée", foto: "bilder/fraise-enchantee.jpg",
-    fr: "Croquez la magie, laissez brûler le désir.", de: "Beiß in die Magie, lass die Sehnsucht brennen.", en: "Bite into the magic, let desire burn." },
-  { id: "sweet", kat: "dessert", a: "Sweet", b: "Paradise", foto: "bilder/sweet-paradise.jpg",
-    fr: "Une douceur fruitée, une fraîcheur sucrée, un instant de pur bonheur.", de: "Fruchtig, frisch und süß: ein Moment purer Freude.", en: "Fruity, fresh and sweet: a moment of pure joy." },
-  { id: "lunaire", kat: "dessert", a: "La Rose", b: "Lunaire", foto: "bilder/rose-lunaire.jpg",
-    fr: "Éveille ton intuition, écoute ton âme.", de: "Weck deine Intuition, hör auf deine Seele.", en: "Awaken your intuition, listen to your soul." },
-
-  { id: "menthe", kat: "getraenke", a: "Brise de", b: "Menthe", foto: "bilder/brise-de-menthe.jpg",
-    fr: "La fraîcheur des beaux jours, toute l’année.", de: "Die Frische schöner Tage, das ganze Jahr.", en: "The freshness of sunny days, all year round." },
-  { id: "spritz", kat: "getraenke", a: "Golden", b: "Spritz", foto: "bilder/golden-spritz.jpg",
-    fr: "Un rayon de soleil, une touche d’élégance.", de: "Ein Sonnenstrahl, ein Hauch Eleganz.", en: "A ray of sunshine, a touch of elegance." },
-  { id: "pink", kat: "getraenke", a: "Pink", b: "Élixir", foto: "bilder/pink-elixir.jpg",
-    fr: "Une fragrance fruitée au charme irrésistible.", de: "Ein fruchtiger Duft mit unwiderstehlichem Charme.", en: "A fruity fragrance with irresistible charm." },
-  { id: "elegance", kat: "getraenke", a: "Golden", b: "Élégance", foto: "bilder/golden-elegance.jpg",
-    fr: "Faites pétiller vos instants précieux.", de: "Lass deine kostbaren Momente prickeln.", en: "Make your precious moments sparkle." },
-  { id: "choco", kat: "getraenke", a: "Choco", b: "Sensation", foto: "bilder/choco-sensation.jpg",
-    fr: "Laissez-vous séduire par l’intensité du chocolat.", de: "Lass dich von intensiver Schokolade verführen.", en: "Let the intensity of chocolate seduce you." },
-  { id: "matcha", kat: "getraenke", a: "Matcha", b: "Mystique", foto: "bilder/matcha-mystique.jpg",
-    fr: "Une gorgée de douceur, un nuage de magie.", de: "Ein Schluck Sanftheit, eine Wolke Magie.", en: "A sip of softness, a cloud of magic." },
-
-  { id: "rose", kat: "deko", a: "Rose", b: "Éternelle", foto: "bilder/rose-eternelle-deko.jpg",
-    fr: "L’élégance d’une rose pour un amour qui dure toujours.", de: "Die Eleganz einer Rose für eine Liebe, die für immer bleibt.", en: "The elegance of a rose for a love that lasts forever." },
-  { id: "lion", kat: "deko", a: "Lion", b: "d’Afrique", foto: "bilder/lion-afrique.jpg",
-    fr: "Une flamme de force, de fierté et d’héritage.", de: "Eine Flamme der Stärke, des Stolzes und der Herkunft.", en: "A flame of strength, pride and heritage." },
-  { id: "reve", kat: "deko", a: "Rêve", b: "Fleuri", foto: "bilder/reve-fleuri.jpg",
-    fr: "Une douceur florale qui fait naître les plus beaux rêves.", de: "Blumige Sanftheit für die schönsten Träume.", en: "A floral softness that awakens the sweetest dreams." },
-  { id: "ecrin", kat: "deko", a: "Écrin", b: "de Nature", foto: "bilder/ecrin-de-nature.jpg",
-    fr: "Une lumière qui révèle la beauté du naturel.", de: "Ein Licht, das die Schönheit der Natur zeigt.", en: "A light that reveals the beauty of nature." },
-  { id: "ocean", kat: "deko", a: "Océan de", b: "Cristal", foto: "bilder/ocean-de-cristal.jpg",
-    fr: "Laissez-vous envelopper par la fraîcheur de l’océan.", de: "Lass dich von der Frische des Ozeans umhüllen.", en: "Let the freshness of the ocean wrap around you." },
-  { id: "florale", kat: "deko", a: "Florale", b: "", foto: "bilder/florale.jpg",
-    fr: "Une étreinte de fleurs pour un instant de sérénité.", de: "Eine Umarmung aus Blüten für einen Moment der Ruhe.", en: "An embrace of flowers for a moment of serenity." },
-  { id: "nectar", kat: "deko", a: "Nectar", b: "Solaire", foto: "bilder/nectar-solaire.jpg",
-    fr: "La chaleur d’un soir d’été.", de: "Die Wärme eines Sommerabends.", en: "The warmth of a summer evening." },
-
-  { id: "amour", kat: "romance", a: "L’Amour", b: "Intemporel", foto: "bilder/amour-intemporel.jpg",
-    fr: "Deux cœurs, une seule histoire.", de: "Zwei Herzen, eine Geschichte.", en: "Two hearts, one story." },
-  { id: "folie", kat: "romance", a: "Je t’aime", b: "à la folie", foto: "bilder/je-taime-a-la-folie.jpg",
-    duft: { de: "Vanille & rote Früchte", fr: "Vanille & fruits rouges", en: "Vanilla & red berries" },
-    fr: "Une bougie romantique et intemporelle.", de: "Eine romantische, zeitlose Kerze.", en: "A romantic, timeless candle." },
-  { id: "potion", kat: "romance", a: "Love", b: "Potion", foto: "bilder/love-potion.jpg",
-    duft: { de: "Erdbeere, Champagner & rote Früchte", fr: "Fraise, champagne & fruits rouges", en: "Strawberry, champagne & red berries" },
-    fr: "Une bougie envoûtante pour une ambiance passionnée.", de: "Eine betörende Kerze für leidenschaftliche Stimmung.", en: "A bewitching candle for a passionate mood." },
-  { id: "rose2", kat: "romance", a: "Rose", b: "Éternelle", foto: "bilder/rose-eternelle-romance.jpg",
-    duft: { de: "Rose & Amber", fr: "Rose & ambre", en: "Rose & amber" },
-    fr: "L’élégance d’une rose pour un amour qui dure toujours.", de: "Die Eleganz einer Rose für eine Liebe, die für immer bleibt.", en: "The elegance of a rose for a love that lasts forever." },
-  { id: "rouge", kat: "romance", a: "Rouge", b: "Désir", foto: "bilder/rouge-desir.jpg",
-    fr: "Une fragrance envoûtante, une passion à fleur de peau.", de: "Ein betörender Duft, Leidenschaft zum Greifen nah.", en: "A captivating fragrance, passion at your fingertips." }
-];
-
-const GESCHENKE = [
-  { a: "Coffret", b: "Amour Infini", kerzen: ["amour", "rouge"],
-    schoko: { de: "Zartbitter-Pralinen", fr: "Pralinés au chocolat noir", en: "Dark chocolate pralines" },
-    wein:   { de: "Kleiner Rotwein (20 cl)", fr: "Petite bouteille de vin rouge (20 cl)", en: "Small bottle of red wine (20 cl)" },
-    anlass: { de: "Valentinstag, Jahrestag, Antrag", fr: "Saint-Valentin, anniversaire de couple, demande", en: "Valentine’s Day, anniversary, proposal" },
-    fr: "Pour dire je t’aime, sans un mot de trop.", de: "Um „Ich liebe dich“ zu sagen, ohne ein Wort zu viel.", en: "To say I love you, without one word too many." },
-  { a: "Coffret", b: "Pétillant", kerzen: ["elegance", "spritz"],
-    schoko: { de: "Weiße Schokolade", fr: "Chocolat blanc", en: "White chocolate" },
-    wein:   { de: "Piccolo Sekt (20 cl)", fr: "Petite bouteille de vin pétillant (20 cl)", en: "Small bottle of sparkling wine (20 cl)" },
-    anlass: { de: "Geburtstag, Jubiläum, Erfolg feiern", fr: "Anniversaire, fête, réussite", en: "Birthday, celebration, success" },
-    fr: "Un toast à vos plus beaux moments.", de: "Ein Toast auf deine schönsten Momente.", en: "A toast to your finest moments." },
-  { a: "Coffret", b: "Gourmand", kerzen: ["choco", "orange"],
-    schoko: { de: "Zartbitterschokolade mit Orange", fr: "Chocolat noir à l’orange", en: "Dark chocolate with orange" },
-    wein:   { de: "Kleiner Rotwein (20 cl)", fr: "Petite bouteille de vin rouge (20 cl)", en: "Small bottle of red wine (20 cl)" },
-    anlass: { de: "Weihnachten, für Genießer, Dankeschön", fr: "Noël, pour les gourmands, merci", en: "Christmas, for food lovers, thank you" },
-    fr: "La gourmandise en double, le plaisir en triple.", de: "Doppelter Genuss, dreifache Freude.", en: "Double the treat, triple the pleasure." },
-  { a: "Coffret", b: "Douceur Fruitée", kerzen: ["sweet", "pink"],
-    schoko: { de: "Weiße Schokolade mit Erdbeere", fr: "Chocolat blanc à la fraise", en: "White chocolate with strawberry" },
-    wein:   { de: "Kleiner Roséwein (20 cl)", fr: "Petite bouteille de vin rosé (20 cl)", en: "Small bottle of rosé wine (20 cl)" },
-    anlass: { de: "Beste Freundin, Geburtstag, Mädelsabend", fr: "Meilleure amie, anniversaire, soirée entre filles", en: "Best friend, birthday, girls’ night" },
-    fr: "Un bouquet fruité pour une amitié sucrée.", de: "Ein fruchtiger Strauß für eine süße Freundschaft.", en: "A fruity bouquet for a sweet friendship." },
-  { a: "Coffret", b: "Jardin Secret", kerzen: ["reve", "florale"],
-    schoko: { de: "Vollmilch-Pralinen", fr: "Pralinés au chocolat au lait", en: "Milk chocolate pralines" },
-    wein:   { de: "Kleiner Weißwein (20 cl)", fr: "Petite bouteille de vin blanc (20 cl)", en: "Small bottle of white wine (20 cl)" },
-    anlass: { de: "Muttertag, Danke sagen, Einweihung", fr: "Fête des mères, dire merci, crémaillère", en: "Mother’s Day, saying thank you, housewarming" },
-    fr: "Des fleurs qui ne fanent jamais.", de: "Blumen, die niemals verwelken.", en: "Flowers that never fade." },
-  { a: "Coffret", b: "à composer", frei: true, kerzen: ["menthe", "rose"],
-    fr: "Deux bougies, ton choix, ton histoire.", de: "Zwei Kerzen deiner Wahl, deine Geschichte.", en: "Two candles of your choice, your story." }
-];
+// Kategorien, Kerzen und Geschenksets stehen in katalog.json.
+// Am einfachsten bearbeitest du sie über die Verwaltungsseite: admin.html
+let KATEGORIEN = [], PRODUKTE = [], GESCHENKE = [];
 
 const T = {
   de: {
@@ -481,7 +384,28 @@ let L = "de";
 try { L = localStorage.getItem("neissa-lang") || ""; } catch {}
 if (!T[L]) { const n = (navigator.language || "de").slice(0, 2); L = T[n] ? n : "de"; }
 const t = (k) => T[L][k];
-const katName = (id) => ((KATEGORIEN.find(k => k.id === id) || {}).name || {})[L] || "";
+// Text in der gewählten Sprache, sonst in der nächsten vorhandenen
+const tx = (o) => !o ? "" : typeof o === "string" ? o : (o[L] || o.de || o.fr || o.en || "");
+const katName = (id) => tx((KATEGORIEN.find(k => k.id === id) || {}).name);
+const preisText = (p) => {
+  const v = String(p || "").trim();
+  if (!v) return "";
+  if (/^\d+([.,]\d{1,2})?$/.test(v)) return Number(v.replace(",", ".")).toLocaleString(L === "en" ? "en-GB" : L === "fr" ? "fr-FR" : "de-DE", { style: "currency", currency: "EUR" });
+  return v;
+};
+const preisOderAnfrage = (p) => esc(preisText(p) || t("onRequest"));
+const sloganKurz = (o) => o.fr || tx(o);
+function katalogLaden(d) {
+  const sicht = (x) => x && x.sichtbar !== false;
+  KATEGORIEN = (d.kategorien || []).filter(sicht);
+  const katIds = new Set(KATEGORIEN.map(k => k.id));
+  PRODUKTE = (d.produkte || []).filter(p => sicht(p) && katIds.has(p.kat));
+  GESCHENKE = (d.geschenke || []).filter(sicht).map(g => {
+    let k = (g.kerzen || []).filter(id => byId(id));
+    if (g.frei && k.length < 2) k = PRODUKTE.slice(0, 2).map(p => p.id);
+    return { ...g, kerzen: k };
+  }).filter(g => g.kerzen.length === 2);
+}
 
 let aktiv = "alle";
 const anzahl = (id) => id === "geschenk" ? GESCHENKE.length : PRODUKTE.filter(p => p.kat === id).length;
@@ -490,31 +414,34 @@ function render() {
   const cats = KATEGORIEN.filter(k => anzahl(k.id) > 0);
   $("#chips").innerHTML = [{ id: "alle" }, ...cats].map(k => {
     const n = k.id === "alle" ? PRODUKTE.length + GESCHENKE.length : anzahl(k.id);
-    const label = k.id === "alle" ? t("all") : k.name[L];
+    const label = k.id === "alle" ? t("all") : tx(k.name);
     return `<button class="cat-btn" type="button" data-k="${k.id}" aria-pressed="${k.id === aktiv}">${esc(label)}<span class="n">${n}</span></button>`;
   }).join("");
   const zeigen = aktiv === "alle" ? cats : cats.filter(k => k.id === aktiv);
   $("#catalog").innerHTML = zeigen.map(k => `
     <section class="cat" id="kat-${k.id}">
-      <div class="cat-head"><div class="caps">${esc(t("collection"))}</div><h2>${esc(k.name[L])}</h2><p>${esc(k.text[L])}</p></div>
+      <div class="cat-head"><div class="caps">${esc(t("collection"))}</div><h2>${esc(tx(k.name))}</h2><p>${esc(tx(k.text))}</p></div>
       <div class="grid">${k.id === "geschenk"
         ? GESCHENKE.map((g, i) => `
         <button class="prod" type="button" data-g="${i}" aria-label="${esc(voll(g))}">
           <span class="duo">${g.kerzen.map(id => `<img src="${esc(byId(id).foto)}" alt="" loading="lazy">`).join("")}<span class="bow">${bowSvg}${esc(g.frei ? t("freeBadge") : t("giftShort"))}</span></span>
           ${nameHtml(g)}
-          <span class="slogan">${esc(L === "fr" ? g.fr : g[L])}</span>
+          <span class="slogan">${esc((L === "fr" ? g.fr : g[L]) || sloganKurz(g))}</span>
+          ${preisText(g.preis) ? `<span class="preis">${esc(preisText(g.preis))}</span>` : ""}
         </button>`).join("")
         : PRODUKTE.map((p, i) => p.kat !== k.id ? "" : `
         <button class="prod" type="button" data-i="${i}" aria-label="${esc(voll(p))}">
           <span class="ph"><img src="${esc(p.foto)}" alt="${esc(voll(p))}" loading="lazy"></span>
           ${nameHtml(p)}
-          <span class="slogan">${esc(p.fr)}</span>
+          <span class="slogan">${esc(sloganKurz(p))}</span>
+          ${preisText(p.preis) ? `<span class="preis">${esc(preisText(p.preis))}</span>` : ""}
         </button>`).join("")}</div>
     </section>`).join("");
 }
 
 function sloganBlock(o) {
-  return `<p class="fr">${esc(o.fr)}</p>${L === "fr" ? "" : `<p class="de">${esc(o[L])}</p>`}`;
+  const fr = o.fr || "", eig = L === "fr" ? "" : (o[L] || (fr ? "" : tx(o)));
+  return (fr ? `<p class="fr">${esc(fr)}</p>` : "") + (eig && eig !== fr ? `<p class="de">${esc(eig)}</p>` : "");
 }
 function zeigeSheet(html) {
   const bg = $("#sheetBg");
@@ -533,7 +460,7 @@ function oeffne(i) {
       ${nameHtml(p)}
       <div class="orn" aria-hidden="true">♡</div>
       ${sloganBlock(p)}
-      <dl>${p.duft ? `<dt>${t("scent")}</dt><dd>${esc(p.duft[L])}</dd>` : ""}<dt>${t("kind")}</dt><dd>${t("kindVal")}</dd><dt>${t("price")}</dt><dd>${t("onRequest")}</dd></dl>
+      <dl>${tx(p.duft) ? `<dt>${t("scent")}</dt><dd>${esc(tx(p.duft))}</dd>` : ""}<dt>${t("kind")}</dt><dd>${t("kindVal")}</dd><dt>${t("price")}</dt><dd>${preisOderAnfrage(p.preis)}</dd></dl>
       <div class="btns">
         <a class="btn wa" target="_blank" rel="noopener" href="${waLink(msg)}">${t("askWa")}</a>
         <a class="btn ghost" href="${mailLink(t("subjAsk") + ": " + voll(p), msg)}">${t("askMail")}</a>
@@ -554,12 +481,12 @@ function oeffneGeschenk(i) {
       <ul class="gift-list">
         <li><span>${t("candle")} <b>${esc(voll(k1))}</b></span></li>
         <li><span>${t("candle")} <b>${esc(voll(k2))}</b></span></li>
-        <li><span>${t("chocolate")}: ${esc(g.schoko[L])}</span></li>
-        <li><span>${t("wine")}: ${esc(g.wein[L])}</span></li>
+        <li><span>${t("chocolate")}: ${esc(tx(g.schoko))}</span></li>
+        <li><span>${t("wine")}: ${esc(tx(g.wein))}</span></li>
         <li><span>${t("card")}</span></li>
       </ul>
-      <p class="occ">${t("occasion")}: ${esc(g.anlass[L])}</p>
-      <dl><dt>${t("price")}</dt><dd>${t("onRequest")}</dd></dl>
+      <p class="occ">${t("occasion")}: ${esc(tx(g.anlass))}</p>
+      <dl><dt>${t("price")}</dt><dd>${preisOderAnfrage(g.preis)}</dd></dl>
       <div class="card-msg"><label for="cardText">${t("cardLabel")}</label><textarea id="cardText" placeholder="${esc(t("cardPh"))}"></textarea></div>
       <div class="btns">
         <a class="btn wa" target="_blank" rel="noopener" data-gift="${i}" data-ch="wa" href="#">${t("askWa")}</a>
@@ -576,7 +503,7 @@ function giftLinks(i) {
 document.addEventListener("input", (e) => { if (e.target.id === "fK1" || e.target.id === "fK2") { const im = document.querySelectorAll(".sheet .duo img"); const k = byId(e.target.value); const img = im[e.target.id === "fK1" ? 0 : 1]; if (img && k) { img.src = k.foto; img.alt = voll(k); } } if (e.target.id === "cardText" || e.target.hasAttribute("data-frei")) { const a = document.querySelector("[data-gift]"); if (a) giftLinks(+a.dataset.gift); } });
 
 function kerzenOptionen(sel) {
-  return KATEGORIEN.filter(k => k.id !== "geschenk").map(k => `<optgroup label="${esc(k.name[L])}">${PRODUKTE.filter(p => p.kat === k.id).map(p => `<option value="${p.id}"${p.id === sel ? " selected" : ""}>${esc(voll(p))}</option>`).join("")}</optgroup>`).join("");
+  return KATEGORIEN.filter(k => k.id !== "geschenk").map(k => `<optgroup label="${esc(tx(k.name))}">${PRODUKTE.filter(p => p.kat === k.id).map(p => `<option value="${p.id}"${p.id === sel ? " selected" : ""}>${esc(voll(p))}</option>`).join("")}</optgroup>`).join("");
 }
 function oeffneFrei(i) {
   const g = GESCHENKE[i], [k1, k2] = g.kerzen.map(byId);
@@ -595,7 +522,7 @@ function oeffneFrei(i) {
         ${sel("fSchoko", t("chocChoice"), t("chocs").map(c => `<option>${esc(c)}</option>`).join(""))}
         ${sel("fWein", t("wineChoice"), t("wines").map(c => `<option>${esc(c)}</option>`).join(""))}
       </div>
-      <dl><dt>${t("price")}</dt><dd>${t("onRequest")}</dd></dl>
+      <dl><dt>${t("price")}</dt><dd>${preisOderAnfrage(g.preis)}</dd></dl>
       <div class="card-msg"><label for="cardText">${t("cardLabel")}</label><textarea id="cardText" placeholder="${esc(t("cardPh"))}"></textarea></div>
       <div class="btns">
         <a class="btn wa" target="_blank" rel="noopener" data-gift="${i}" data-ch="wa" href="#">${t("askWa")}</a>
@@ -789,6 +716,10 @@ function setzeSprache(l) {
 $("#waText").textContent = SHOP.whatsappAnzeige;
 $("#mailText").textContent = SHOP.email;
 setzeSprache(L);
+fetch("katalog.json?v=" + Date.now(), { cache: "no-store" })
+  .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  .then(d => { katalogLaden(d); render(); })
+  .catch(() => { $("#catalog").innerHTML = '<p style="text-align:center;padding:40px 0">Katalog konnte nicht geladen werden. Bitte Seite neu laden.</p>'; });
 </script>
 </body>
 </html>
