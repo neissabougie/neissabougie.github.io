@@ -75,7 +75,13 @@
       "foto": "bilder/perle-des-tropiques.jpg",
       "fr": "Un instant d’évasion à chaque flamme.",
       "de": "Ein Moment Fernweh in jeder Flamme.",
-      "en": "A moment of escape with every flame."
+      "en": "A moment of escape with every flame.",
+      "duft": {
+        "de": "Minze und coco",
+        "fr": "Menthe coco",
+        "en": ""
+      },
+      "preis": "14,99"
     },
     {
       "id": "orange",
