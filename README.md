@@ -1,5 +1,8 @@
 # Neïssa Bougie – Digitaler Katalog
 
-Website: https://stevefowa.github.io/neissa-bougie/
+Website: https://neissabougie.github.io/
 
-Alles steckt in `index.html` (Bereich „HIER BEARBEITEN“) und den Fotos im Ordner `bilder/`.
+- `katalog.json`: Kategorien, Kerzen, Geschenksets und Preise
+- `admin.html`: Verwaltungsseite (https://neissabougie.github.io/admin.html) zum Hinzufügen, Ändern, Ausblenden und Löschen. Braucht einmalig einen GitHub-Schlüssel mit dem Recht `public_repo`.
+- `index.html`: die Seite selbst (Texte der Seite im Bereich „HIER BEARBEITEN“)
+- `bilder/`: Fotos
